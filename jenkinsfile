@@ -20,8 +20,8 @@ pipeline {
     stages {
         stage('Source Checkout (Application)') {
             steps {
-                echo "Cloning application repository: https://github.com/karpanitava/forjenkins.git"
-                git url: 'https://github.com/karpanitava/forjenkins.git', branch: 'master' // Specify a branch
+                echo "Cloning application repository: https://github.com/karpanitava/ci-cd.git"
+                git url: 'https://github.com/karpanitava/ci-cd.git', branch: 'master' // Specify a branch
             }
         }
 
