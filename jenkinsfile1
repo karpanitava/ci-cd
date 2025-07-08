@@ -17,14 +17,14 @@ pipeline {
 
         stage('Deployment') {
             steps {
-                bat '''curl -u hariadmin:hariadmin -T "C:/ProgramData/Jenkins/.jenkins/workspace/newpo/target/mywebapp.war" "http://localhost:8888/manager/text/deploy?path=/testapp2&update=true"'''
+                bat '''curl -u hariadmin:hariadmin -T "C:/ProgramData/Jenkins/.jenkins/workspace/newpo/target/mywebapp.war" "http://localhost:8181/manager/text/deploy?path=/testapp&update=true"'''
             }
         }
 
         stage('Testing') {
             steps {
-                git url: 'https://github.com/karpanitava/tetsingjava.git'
-                bat 'cmd java -jar C:/ProgramData/Jenkins/.jenkins/workspace/newpo/test.jar'
+                git url: 'https://github.com/karpanitava/testingweb.git'
+                bat 'cmd java -jar C:/ProgramData/Jenkins/.jenkins/workspace/newpo/testwebapp.jar'
             }
         }
         stage('Check Results') {
@@ -40,15 +40,29 @@ pipeline {
         }
         stage("Delivery Approval") {
             steps {
-                input message: 'Approve deployment to Production?', ok: 'Deploy to Production', submitter: 'Adarsh'
+                input message: 'Approve deployment to Production?', ok: 'Deploy to Production', submitter: 'hariprasad'
             }
         }
 
         stage("Delivery") {
             steps {
-                bat '''curl -u prasadadmin:prasadadmin -T "C:/ProgramData/Jenkins/.jenkins/workspace/newpo/target/mywebapp.war" "http://localhost:8889/manager/text/deploy?path=/prodapp2&update=true"'''
+                bat '''curl -u prasadadmin:prasadadmin -T "C:/ProgramData/Jenkins/.jenkins/workspace/newpo/target/mywebapp.war" "http://localhost:8282/manager/text/deploy?path=/prodapp&update=true"'''
             }
         }
     } // closes stages
+// Post-build actions (e.g., notifications, cleanup)
+    post {
+        always {
+            echo "Pipeline finished. Current build status: ${currentBuild.result}"
+            // You can add more post-build actions here, like archiving artifacts or sending notifications
+        }
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Check logs for details."
+        }
+    }
 } // closes pipeline
+
 
